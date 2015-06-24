@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set password [lrange $argv 0 0]
+set ip_address [lrange $argv 1 1]
+set command [lindex $argv 2]
+spawn ssh -q -t -o StrictHostKeyChecking=no pavlo@$ip_address $command 
+expect "*?assword:*"
+send -- "$password\r"
+expect eof
