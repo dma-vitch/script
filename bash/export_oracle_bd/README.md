@@ -7,7 +7,7 @@ Requirement
 
 Install
 -------
-- Put bkp_oracle.sh and .envoracle in directory
+- Put bkp_oracle.sh and envoracle.cfg in directory
 
 - Add cron task for user oracle
 `
