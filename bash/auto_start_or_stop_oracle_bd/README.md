@@ -11,10 +11,26 @@ Install
 
 - Change path to envoracle.cfg in script [`oraservice.sh`] (https://github.com/dma-vitch/script/blob/master/bash/auto_start_or_stop_oracle_bd/oraservice.sh)
 
-- Set privelegeus on script:
+- Set execution on script:
 
-`chgrp dba user`
-`chmod 750 user`
+`chmod u+x path-to-script`
+ 
+or
+```
+chgrp groupname path-to-script
+chmod 750 path-to-script
+```
+
+- Add Service to the Startup
+`
+chkconfig --add oraservice.sh
+`
+
+- Turn-on a Service for a Selected Run Level
+`
+chkconfig --level 234 oraservice.sh on 
+`
+or 
 
 - Create simlink
 ```
