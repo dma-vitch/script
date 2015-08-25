@@ -22,13 +22,14 @@ chmod 750 path-to-script
 ```
 
 - Add Service to the Startup
+
 `
-chkconfig --add oraservice.sh
+chkconfig --add oraservice
 `
 
 - Turn-on a Service for a Selected Run Level
 `
-chkconfig --level 234 oraservice.sh on 
+chkconfig --level 234 oraservice on 
 `
 or 
 
