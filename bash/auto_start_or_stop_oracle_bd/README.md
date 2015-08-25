@@ -9,7 +9,7 @@ Install
 -------
 - Put oraservice.sh in `/etc/init.d` and envoracle.cfg in one any directory
 
-- Change path to envoracle.cfg in script [`oraservice.sh`] (https://github.com/dma-vitch/script/blob/master/bash/auto_start_or_stop_oracle_bd/oraservice.sh)
+- Change path to envoracle.cfg in script [`oraservice`] (https://github.com/dma-vitch/script/blob/master/bash/auto_start_or_stop_oracle_bd/oraservice)
 
 - Set execution on script:
 
