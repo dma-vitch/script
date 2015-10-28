@@ -1,0 +1,71 @@
+#!/bin/bash
+# Скрипт для автостарта служб hadoop
+# chkconfig: 2345 97 03
+### BEGIN INIT INFO
+# Provides:          hadoop-core
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:	 2 3 4
+# Default-Stop: 	 0 1 6
+# Description:       hadoop-core-service
+# Short-Description: Enable hadoop core service
+### END INIT INFO
+
+#load environment
+export PASSWORD=admin
+export CLUSTER_NAME=test
+export AMBARI_HOST=testhdp
+export AMBARI_USER=admin 
+
+check_ambari_state() {
+PID_FILE=/var/run/ambari-server/ambari-server.pid
+if [ -f $PID_FILE ]; then
+	PID=$(cat $PID_FILE)
+	if [ $PID -gt 0 ]; then
+		IS_EXISTING=$(ps auxw | grep -v grep| grep $PID|wc -l)
+		if [ $IS_EXISTING -gt 0 ]; then
+		    return 0
+		fi
+	fi
+fi
+	#echo "Not run ambari-server"
+	return 1	
+}
+
+start_hdp() {
+curl -u $AMBARI_USER:$PASSWORD "http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services?params/run_smoke_test=true" -X PUT -H 'X-Requested-By: ambari' --data '{"RequestInfo": {"context": "Start All Services"}, "Body": {"ServiceInfo": {"state": "STARTED"}}}'
+}
+
+stop_hdp() {
+curl -u $AMBARI_USER:$PASSWORD "http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services?params/run_smoke_test=true" -X PUT -H 'X-Requested-By: ambari' --data '{"RequestInfo": {"context": "Stop All Services"}, "Body": {"ServiceInfo": {"state": "INSTALLED"}}}'
+}
+
+case "$1" in
+
+  start)
+	check_ambari_state;
+	if [[ $? != 0 ]]; then
+		echo "ERROR: No ambari server running. Please run ambari first"
+		exit 1
+	else
+		start_hdp;
+	fi	
+	;;
+
+  stop)	
+	check_ambari_state;
+	if [[ $? != 0 ]]; then
+		echo "ERROR: No ambari server running.Please run ambari first.Nothing to do"
+		exit 1
+	else
+		stop_hdp;
+	fi	
+	;;
+  check)
+	check_ambari_state;
+	;;
+  *)
+	echo "Usage: hadoop-core {start|stop}]"
+	exit 1
+esac 
+exit 0
