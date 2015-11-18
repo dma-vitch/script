@@ -1,0 +1,110 @@
+﻿#!/bin/bash
+#Скрипт автозапуска hue
+#/etc/init.d/hue
+#Hue web server
+# chkconfig: 2345 90 10
+### BEGIN INIT INFO
+# Provides:			hue-web-server
+# Required-Start:	$network
+# Required-Stop:	$network
+# Default-Start:	2 3 4
+# Default-Stop:		0 1 6
+# Description:		Hue web server
+# Short-Description: Enable Hue Web Server
+### END INIT INFO
+
+. /etc/init.d/functions
+
+LOCKFILE=/var/lock/subsys/hue
+#server's location 
+DAEMON=/usr/local/hue/build/env/bin/supervisor
+# Log directory to use
+LOGDIR=/usr/local/hue/logs
+#PID directory to use
+PIDFILE=/usr/local/hue/supervisor.pid
+USER=hue
+EXEC=/usr/local/hue/build/env/bin/python
+DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
+HUE_SHUTDOWN_TIMEOUT=15
+
+hue_start() {
+        echo -n "Starting hue: "
+        for dir in $(dirname $PIDFILE) $LOGDIR 
+        do
+            mkdir -p $dir
+            chown -R $USER $dir
+        done
+
+        # Check if already running
+        if [ -e $PIDFILE ] && checkpid $(cat $PIDFILE) ; then
+            echo "already running"
+            return 0
+        fi
+        # the supervisor itself will setuid down to $USER
+        env - PATH=/usr/local/hue/build/env/bin:$PATH $DAEMON $DAEMON_OPTS
+        ret=$?
+        base=$(basename $0)
+        if [ $ret -eq 0 ]; then
+            sleep 5
+            test -e $PIDFILE && checkpid $(cat $PIDFILE)
+            ret=$?
+        fi
+        if [ $ret -eq 0 ]; then
+            touch $LOCKFILE
+            success $"$base startup"
+        else
+            failure $"$base startup"
+        fi
+        echo
+        return $ret
+}
+
+hue_stop() {
+        if [ ! -e $PIDFILE ]; then
+            success "Hue is not running"
+            return 0
+        fi
+
+        echo -n "Shutting down hue: "
+
+        HUE_PID=`cat $PIDFILE 2>/dev/null`
+        if [ -n "$HUE_PID" ]; then
+          kill -TERM ${HUE_PID} &>/dev/null
+          for i in `seq 1 ${HUE_SHUTDOWN_TIMEOUT}` ; do
+            kill -0 ${HUE_PID} &>/dev/null || break
+            sleep 1
+          done
+          kill -KILL ${HUE_PID} &>/dev/null
+        fi
+        echo
+        rm -f $LOCKFILE $PIDFILE
+        return 0
+}
+
+hue_restart() {
+  hue_stop
+  hue_start
+}
+
+case "$1" in
+    start)
+        hue_start
+        ;;
+    stop)
+        hue_stop
+        ;;
+    status)
+        status -p $PIDFILE supervisor
+        ;;
+    restart|reload)
+        hue_restart
+        ;;
+    condrestart)
+        [ -f $LOCKFILE ] && restart || :
+        ;;
+    *)
+        echo "Usage: hue {start|stop|status|reload|restart|condrestart"
+        exit 1
+        ;;
+esac
+exit $?
