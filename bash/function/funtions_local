@@ -34,3 +34,11 @@ if [ $# -eq 0 -o $# -gt 2 ]; then
 fi
 
 #killtree $@
+
+# Functions output color messages
+function color_str {
+case $2 in
+    red) printf "\033[1;31m$1\033[0m\n" ;;
+    green) printf "\033[1;32m$1\033[0m\n" ;;
+esac
+}
