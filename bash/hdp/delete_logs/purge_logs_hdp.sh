@@ -2,7 +2,7 @@
 #params
 RED="\033[1;31m"
 NORMAL="\033[0m\n"
-
+E_BADARGS=65
 #Block service function
 function usage {
 cat <<EOF
@@ -96,11 +96,12 @@ do
 	:)
 	    printf "$RED Missing argument for -"$OPTARG" $NORMAL \n" >&2
 	    usage
+		exit $E_BADARGS
 	    ;;
-        \?)	
+    \?)	
 	    printf "$RED Unknown option -"$OPTARG" $NORMAL \n" >&2
 	    usage
-	    exit
+	    exit 1
 	    ;;
     esac
 done
@@ -132,8 +133,9 @@ case $user in
 		metrics $days
 		;;
 	*)
-		printf "$RED Wrong parametrs for running $NORMAL \n" >&2
+		printf "$RED Wrong parameters for running $NORMAL \n" >&2
 		usage
+		exit $E_BADARGS
 		;;
 esac
 exit 0
