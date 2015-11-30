@@ -1,0 +1,52 @@
+﻿#!/usr/bin/expect -f
+if {[llength $argv] != 2} {
+puts "Не верно указаны переменные: ./get_mac 10.5.X.XXX 'port'"
+exit 1
+}
+set ip [lindex $argv 0]
+set eth [lindex $argv 1]
+set login "ЛОГИН НА СВИТЧЕ"
+set pass "ПАРОЛЬ"
+package require Expect
+spawn telnet $ip
+
+expect {
+        "*assw*" {
+        send "$pass\n"
+        expect "*>"
+        send "su\n"
+        expect "*ass*"
+        send "$pass\n"
+        expect "*>"
+        send "disp mac-addr dy | inc $eth\n"
+        expect "*>"
+        send "q\n"}
+
+        "*User Name*" {
+        send "$login\n"
+        expect "*asswor*"
+        send "$pass\n"
+        expect "*#"
+        send "show brid address-table ethernet e$eth\n"
+        expect "*#"
+        send "exit\n"}
+
+        "*login*" {
+        send "admin\n"
+        expect "*password*"
+        send "$pass\n"
+        expect "*#*"
+        send "show fdb port $eth\n"
+        expect "*#*"
+        send "exit\n"}
+
+         "*Name*" {
+        send "$login\n"
+        expect "*Word*"
+        send "$pass\n"
+        expect "*#"
+        send "show fdb port $eth\n"
+        expect "*#"
+        send "logo\n"}
+}
+interact
