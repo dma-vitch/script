@@ -19,6 +19,7 @@ OPTIONS:
 		    metrics
 		    hive
 		    hbase
+			hdfs
 	-d	How many days to keep logs from current date (if you not set this option when use default is 7)
 	
 EOF
