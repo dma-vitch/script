@@ -53,6 +53,11 @@ echo "delete logs for service hbase, keep last $1 days"
 find /var/log/hbase/ -type f -mtime +$1 -name 'gc.log-*' | xargs rm -f;
 }
 
+function hdfs {
+echo "delete logs for service hdfs, keep last $1 days"
+find /var/log/hadoop/hdfs/ -type f -mtime +$1 \( -name 'gc.log-*' -o -name 'hdfs-audit.log.*' \) | xargs rm -f;
+}
+
 function oozie {
 echo "delete logs for service oozie, keep last $1 days"
 find /var/log/oozie/ -type f -mtime +$1 \( -name 'oozie.log.*' -o -name 'oozie-instrumentation.log.*' \) | xargs rm -f;
@@ -120,7 +125,11 @@ case $user in
 		check_user $user
 		hive $days
 		;;
-    hdfs)
+    hbase)
+		check_user $user
+		hbase $days
+		;;
+	hdfs)
 		check_user $user
 		hdfs $days
 		;;
