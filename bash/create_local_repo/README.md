@@ -48,6 +48,31 @@ sudo ln -s /repo/OracleLinux/public_ol6_UEK_latest/getPackage/ /var/www/html/rep
 sudo mkdir -p /var/www/html/repo/OracleLinux/OL6/UEKR3/latest
 sudo ln -s /repo/OracleLinux/public_ol6_UEKR3_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/UEKR3/latest/x86_64
 ```
+
+- To allow a server to use the local Yum repositories, create a file called "/etc/yum.repos.d/local-ol6.repo" with the following contents, where "ol6-yum.localdomain" is the name of the server with the Yum repositories.
+```
+[local_ol6_latest]
+name=Oracle Linux $releasever Latest ($basearch)
+baseurl=http://ol6-yum.localdomain/repo/OracleLinux/OL6/latest/$basearch/
+gpgkey=http://ol6-yum.localdomain/RPM-GPG-KEY-oracle-ol6
+gpgcheck=1
+enabled=1
+
+[local_ol6_UEK_latest]
+name=Latest Unbreakable Enterprise Kernel for Oracle Linux $releasever ($basearch)
+baseurl=http://ol6-yum.localdomain/repo/OracleLinux/OL6/UEK/latest/$basearch/
+gpgkey=http://ol6-yum.localdomain/RPM-GPG-KEY-oracle-ol6
+gpgcheck=1
+enabled=1
+
+[local_ol6_UEKR3_latest]
+name=Latest Unbreakable Enterprise Kernel for Oracle Linux $releasever ($basearch)
+baseurl=http://ol6-yum.localdomain/repo/OracleLinux/OL6/UEKR3/latest/$basearch/
+gpgkey=http://ol6-yum.localdomain/RPM-GPG-KEY-oracle-ol6
+gpgcheck=1
+enabled=1
+```
+
 Features
 ---------
 - Script for automatic update and create local repository
