@@ -40,13 +40,13 @@ sudo restorecon -F -R -v /opt/repository/OracleLinux
 - Present the repositories using the HTTP server.
 `
 sudo mkdir -p /var/www/html/repo/OracleLinux/OL6/latest
-sudo ln -s /repo/OracleLinux/public_ol6_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/latest/x86_64
+sudo ln -s /opt/repository/OracleLinux/public_ol6_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/latest/x86_64
 
 sudo mkdir -p /var/www/html/repo/OracleLinux/OL6/UEK/latest
-sudo ln -s /repo/OracleLinux/public_ol6_UEK_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/UEK/latest/x86_64
+sudo ln -s /opt/repository/OracleLinux/public_ol6_UEK_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/UEK/latest/x86_64
 
 sudo mkdir -p /var/www/html/repo/OracleLinux/OL6/UEKR3/latest
-sudo ln -s /repo/OracleLinux/public_ol6_UEKR3_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/UEKR3/latest/x86_64
+sudo ln -s /opt/repository/OracleLinux/public_ol6_UEKR3_latest/getPackage/ /var/www/html/repo/OracleLinux/OL6/UEKR3/latest/x86_64
 ```
 
 - To allow a server to use the local Yum repositories, create a file called "/etc/yum.repos.d/local-ol6.repo" with the following contents, where "ol6-yum.localdomain" is the name of the server with the Yum repositories.
