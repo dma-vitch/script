@@ -61,7 +61,7 @@ echo "......finished saving hive metastore db file to HDFS" + $(date)
 #At this step, it is assumed that the root home directory has a file called .pgpass and its owned by root and has a permission of 600. Their should only be one line in that file which has -> hostname:5432:ambari:ambari:bigdata
 function bkp_ambari {
 echo "......performing back up of PostgreSQL database for Ambari " + $(date)
-pg_dump --host=hostname  -U ambari  --file=$now.ambari.postgresql.backup
+pg_dump --host=hostname -U ambari  --file=$now.ambari.postgresql.backup
 echo "......finished backing up Ambari PostgreSQL database " + $(date) 
 echo "......saving ambari.postgresql.backup to HDFS " + $(date) 
 hadoop fs -put $now.ambari.postgresql.backup /sql_dbs_backup
