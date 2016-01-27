@@ -42,3 +42,11 @@ case $2 in
     green) printf "\033[1;32m$1\033[0m\n" ;;
 esac
 }
+
+# Functions get path to execute script
+function getpath {
+# Full path to script/полный путь до скрипта
+local ABSOLUTE_FILENAME=`readlink -e "$0"`
+# /dir of script /каталог в котором лежит скрипт
+DIRECTORY=`dirname "$ABSOLUTE_FILENAME"`
+}
