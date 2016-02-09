@@ -119,7 +119,7 @@ do
 	extractor)
 	    unzip $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
-	    find /opt/felix-extractor-$vEXTRACT -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
+	    find /opt/felix-loot-extractor-$vEXTRACT -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
 		rm -f $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip
 	    ;;
 	entitybuild)
