@@ -119,13 +119,13 @@ do
 	extractor)
 	    unzip $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
-	    find /opt/felix-loot-$vEXTRACT -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
+	    find /opt/felix-extractor-$vEXTRACT -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
 		rm -f $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip
 	    ;;
 	entitybuild)
 	    unzip $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
-	    find /opt/felix-loot-$vENTITY -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
+	    find /opt/felix-entitybuild-$vENTITY -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
 		rm -f $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip
 	    ;;
 	\?)
@@ -162,7 +162,7 @@ do
 	    #rm -f $DIRECTORY/felix-loot-$vLOOT.zip
 	    ;;
 	extractor)
-	    ln -s /opt/felix-extractor-$vEXTRACT/felix-loot-extractor -d /etc/init.d/felix-loot-extractor >> $LOGFILE 2>&1
+	    ln -s /opt/felix-loot-extractor-$vEXTRACT/felix-loot-extractor -d /etc/init.d/felix-loot-extractor >> $LOGFILE 2>&1
 	    sleep 1
 	    chkconfig --add felix-loot-extractor >> $LOGFILE 2>&1
 	    chkconfig --level 2345 felix-loot-extractor on >> $LOGFILE 2>&1
