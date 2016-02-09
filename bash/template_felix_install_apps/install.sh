@@ -266,21 +266,26 @@ do
 	    arh && install_java || error
 	    error
 	    ;;  
-        "Install apps")
-            check_var && extract && cruser && own && regserv || error
+    "Install apps")
+        check_var && extract && cruser && own && regserv || error
 	    error
 	    ;;
-        "Update apps")
-            echo "not working now - developing"
+    "Update apps")
+        echo "not working now - developing"
 	    ;;
-        "Quit")
+    "Quit")
 	    break
-            ;;
-        *) echo "invalid option"
+        ;;
+    *)  echo "invalid option"
 	    ;;
     esac
 done
 }
+
+#check arg count
+if [ "$#" -ne 1 ] && [ "$#" -ne 0 ]; then
+    usage
+fi
 
 #check input args
 if [ "$1" = "-h" ]; then
