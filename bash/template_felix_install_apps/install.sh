@@ -114,17 +114,19 @@ do
 	    unzip $DIRECTORY/felix-loot-$vLOOT.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
 	    find /opt/felix-loot-$vLOOT -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
-	    #rm -f $DIRECTORY/felix-loot-$vLOOT.zip
+	    rm -f $DIRECTORY/felix-loot-$vLOOT.zip
 	    ;;
 	extractor)
 	    unzip $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
-	    rm -f $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip
+	    find /opt/felix-loot-$vEXTRACT -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
+		rm -f $DIRECTORY/felix-loot-extractor-$vEXTRACT.zip
 	    ;;
 	entitybuild)
 	    unzip $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
-	    rm -f $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip
+	    find /opt/felix-loot-$vENTITY -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
+		rm -f $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip
 	    ;;
 	\?)
 	    printf "$RED Unknown apps "$APPNAME" $NORMAL \n" >&2
