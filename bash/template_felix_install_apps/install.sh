@@ -125,7 +125,7 @@ do
 	entitybuild)
 	    unzip $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip -d /opt/ >> $LOGFILE 2>&1
 	    sleep 1
-	    find /opt/felix-entitybuild-$vENTITY -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
+	    find /opt/felix-loot-entitybuild-$vENTITY -type f \( -name '*.sh' -o -name '*.jar' \) -exec chmod 0750 {} \;
 		rm -f $DIRECTORY/felix-loot-entitybuild-$vENTITY.zip
 	    ;;
 	\?)
