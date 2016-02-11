@@ -252,12 +252,37 @@ else
 fi
 }
 
+function delete {
+local APPNAME=$apps
+#change separator /изменяем разделитель
+local IFS=",";
+for item in $APPNAME
+do
+    echo -e "Delete $item apps from system " >> $LOGFILE
+    case $item in
+		sorm)
+			rm -rf /opt/felix-loot-$vLOOT
+			#chkconfig --level 2345 felix-sorm off >> $LOGFILE 2>&1
+			#chkconfig --del felix-sorm >> $LOGFILE 2>&1
+			;;
+		extractor)
+			rm -rf /opt/felix-loot-extractor-$vEXTRACT
+			#chkconfig --del felix-loot-extractor >> $LOGFILE 2>&1
+			;;
+		entitybuilder)
+			rm -rf /opt/felix-loot-entitybuilder-$vENTITY
+			#chkconfig --del felix-loot-entitybuilder >> $LOGFILE 2>&1
+			;;
+    esac
+done
+}
+
 LOGFILE=$DIRECTORY/errors.log
 
 function menu {
 #main Bash Menu
 PS3='Please enter your choice: '
-options=("Download apps" "Install JAVA" "Install apps" "Update apps" "Quit")
+options=("Download apps" "Install JAVA" "Install apps" "Update apps" "Uninstall apps" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -275,7 +300,10 @@ do
     "Update apps")
         echo "not working now - developing"
 	    ;;
-    "Quit")
+    "Uninstall apps")
+		delete
+		;;
+	"Quit")
 	    break
         ;;
     *)  echo "invalid option"
