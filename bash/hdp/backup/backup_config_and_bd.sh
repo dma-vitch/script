@@ -50,7 +50,7 @@ echo "......finished saving hue.desktop.db.tar.gz to HDFS " + $(date)
 
 #Create the Hive metastore database dumps and save it to HDFS. You need to set hostname on where mysql is installed.
 function bkp_hive {
-echo "......creating TAR file for Hive's metastore database " + $(date)
+echo "......creating backup file for Hive's metastore database " + $(date)
 mysqldump -h hostname -u hive -phive --add-drop-database --add-drop-table --complete-insert --create-options --debug-check --dump-date --events --extended-insert --flush-privileges --lock-all-tables --log-error=hive_dump.error --databases hive > $now.hive_metastore.sql
 echo "......finished creating Hive metastore backup " + $(date)
 echo "......saving hive metastore db file to HDFS" + $(date)
@@ -60,12 +60,16 @@ echo "......finished saving hive metastore db file to HDFS" + $(date)
 
 #At this step, it is assumed that the root home directory has a file called .pgpass and its owned by root and has a permission of 600. Their should only be one line in that file which has -> hostname:5432:ambari:ambari:bigdata
 function bkp_ambari {
+#service ambari-server stop
+#sleep 1
 echo "......performing back up of PostgreSQL database for Ambari " + $(date)
 pg_dump --host=hostname -U ambari  --file=$now.ambari.postgresql.backup
+pg_dump --host=hostname -U mapred  --file=$now.ambarirca.postgresql.backup ambarirca
 echo "......finished backing up Ambari PostgreSQL database " + $(date) 
 echo "......saving ambari.postgresql.backup to HDFS " + $(date) 
 hadoop fs -put $now.ambari.postgresql.backup /sql_dbs_backup
 echo "......finished saving ambari.postgresql.backup to HDFS" + $(date) 
+#service ambari-server start
 }
 
 #Backup Oozie Derby database and load it up to HDFS for snapshotting and backup/Dr purposes. Run this script where database is located.
@@ -86,7 +90,7 @@ echo "......finished cleaning up locally created temporary backup files" + $(dat
 }
 
 #check count arguments
-if [[ -z "$@"]]
+if [[ -z "$@" ]]
 then
 	printf "$RED Wrong arguments for running $NORMAL \n" >&2
 	usage
