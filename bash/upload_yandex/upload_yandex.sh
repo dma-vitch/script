@@ -28,5 +28,5 @@ for file in $f
 do
 # Uploading to the cloud
 mime_type=`file --brief --mime-type "$file"`
-curl -Sv -k --user $username:"$password" -T -H "Content-Type: $mime_type" "$file" https://webdav.yandex.ru/123/ > /tmp/yanlog.upload.txt
+curl -Sv -k --user $username:"$password" -H "Content-Type: $mime_type" -T "$file" https://webdav.yandex.ru/123/ >> /tmp/yanlog.upload.txt
 done
