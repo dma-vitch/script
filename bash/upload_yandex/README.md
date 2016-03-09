@@ -27,3 +27,22 @@ password=pass
 ` 
 https://webdav.yandex.ru/{directory}
 `
+
+second way
+
+- mount yandex disc into system
+- install davfs2
+
+`
+apt-get install davfs2
+`
+- Create autentification file
+`
+echo "/mnt/yandex.disk username \"password\"" > /etc/davfs2/secrets
+`
+- change permission
+```
+chmod 0600 /etc/davfs2/secrets
+echo "y" > /etc/davfs2/dav.inp
+chmod 0700 /etc/init.d/mountyadisk.sh
+```
