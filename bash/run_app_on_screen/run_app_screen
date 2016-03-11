@@ -17,7 +17,7 @@
 
 . /etc/rc.d/init.d/functions
 
-DAEMON=kafka-manager-manager
+DAEMON=kafka-manager
 KAFKA_MANAGER_HOME="/opt/kafka-manager-1.3.0.5"
 screen="screen"
 session_name="$DAEMON"
@@ -58,9 +58,9 @@ start(){
 status(){
     pid=$(pidof)
     if [ -n "$pid" ]; then
-		echo -e "\e[00;32mKafka-manager is running with pid: $pid\e[00m"
+		echo -e "\e[00;32m"$DAEMON" is running with pid: $pid\e[00m"
     else
-		echo -e "\e[00;31mKafka-manager is not running\e[00m"
+		echo -e "\e[00;31m"$DAEMON" is not running\e[00m"
 		return 3
     fi
 }
