@@ -45,12 +45,12 @@ killtree() {
 }
 
 start(){
-    echo "Starting $DAEMON"
+    echo -e "\e[00;32mStarting $DAEMON\e[00m"
     if [ -z "$PID" ]; then
         cd "$KAFKA_MANAGER_HOME"
         exec sudo -u $OWNER ${screen} -dmS "${session_name}" "${KAFKA_MANAGER_HOME}/run.sh" $ARGS
     else
-        echo -e "Already started or busy\nPIDs ${PID}"
+        echo -e "\e[00;31mAlready started or busy\nPIDs ${PID}\e[00m"
         exit 1
     fi
 }
