@@ -1,5 +1,6 @@
 ﻿#!/bin/bash
 #su - hdfs
+#Usage sudo -u hdfs ./fix_under_block_replica.sh
 replica=${1:-3}
 
 hdfs hdfs fsck / | grep 'Under replicated' | awk -F':' '{print $1}' >> /tmp/under_replicated_files
