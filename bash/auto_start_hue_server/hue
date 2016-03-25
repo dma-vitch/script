@@ -28,7 +28,8 @@ DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
 HUE_SHUTDOWN_TIMEOUT=15
 
 hue_start() {
-        echo -n "Starting hue: "
+        DO="/sbin/runuser -s /bin/bash $USER -c"
+		echo -n "Starting hue: "
         for dir in $(dirname $PIDFILE) $LOGDIR 
         do
             mkdir -p $dir
@@ -41,8 +42,9 @@ hue_start() {
             return 0
         fi
         # the supervisor itself will setuid down to $USER
-        env - PATH=/usr/local/hue/build/env/bin:$PATH $DAEMON $DAEMON_OPTS
-        ret=$?
+        #env - PATH=/usr/local/hue/build/env/bin:$PATH $DAEMON $DAEMON_OPTS
+        $DO "$DAEMON $DAEMON_OPTS"
+		ret=$?
         base=$(basename $0)
         if [ $ret -eq 0 ]; then
             sleep 5
@@ -83,6 +85,7 @@ hue_stop() {
 
 hue_restart() {
   hue_stop
+  sleep 2
   hue_start
 }
 
