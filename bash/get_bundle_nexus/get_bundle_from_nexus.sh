@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 
 # Define Nexus Configuration
 NEXUS_BASE=
@@ -17,9 +17,9 @@ OPTIONS:
    -c    Artifact Classifier
    -e    Artifact Packaging
    -o    Output file
-   -r	   Repository
+   -r	 Repository
    -u    Username
-   -p	   Password
+   -p	 Password
    -n    Nexus Base URL
    -m    Use .netrc
    -z    if nexus has newer version of artifact, remove Output File and exit 
@@ -47,13 +47,13 @@ do
              exit 1
              ;;
          a)
-	     	 OIFS=$IFS
+	     OIFS=$IFS
              IFS=":"
-		     GAV_COORD=( $OPTARG )
-		     GROUP_ID=${GAV_COORD[0]}
+	     GAV_COORD=( $OPTARG )
+	     GROUP_ID=${GAV_COORD[0]}
              ARTIFACT_ID=${GAV_COORD[1]}
              VERSION=${GAV_COORD[2]}	     
-	    	 IFS=$OIFS
+	     IFS=$OIFS
              ;;
          c)
              CLASSIFIER=$OPTARG
@@ -70,21 +70,21 @@ do
          z)
              SNAPSHOT_CHECK=1
              ;;
-		 o)
-			OUTPUT=$OPTARG
-			;;
-		 r)
-		    REPO=$OPTARG
-		    ;;
-		 u)
-		    USERNAME=$OPTARG
-		    ;;
-		 p)
-		    PASSWORD=$OPTARG
-		    ;;
-		 n)
-			NEXUS_BASE=$OPTARG
-			;;
+	 o)
+	     OUTPUT=$OPTARG
+	     ;;
+	 r)
+	     REPO=$OPTARG
+	     ;;
+	 u)
+	     USERNAME=$OPTARG
+	     ;;
+	 p)
+	     PASSWORD=$OPTARG
+	     ;;
+	 n)
+	     NEXUS_BASE=$OPTARG
+	     ;;
          ?)
              echo "Illegal argument $OPTION=$OPTARG" >&2
              usage
@@ -103,25 +103,25 @@ fi
 # Define default values for optional components
 
 # If we don't have set a repository and the version requested is a SNAPSHOT use snapshots, otherwise use releases
-if [[ "$REPOSITORY" == "" ]]
+if [[ "$REPO" == "" ]]
 then
-	if [[ "$VERSION" == *SNAPSHOT ]]
+    if [[ "$VERSION" == *SNAPSHOT ]]
+    then
+	if [[ $VERSION == "LATEST-SNAPSHOT" ]]
 	then
-		if [[ $VERSION == "LATEST-SNAPSHOT" ]]
-		then
-			VERSION=LATEST
-		fi
-		: ${REPO:="snapshots"}
-	else
-		: ${REPO:="releases"}
+	    VERSION=LATEST
 	fi
+	: ${REPO:="snapshots"}
+	else
+	: ${REPO:="releases"}
+    fi
 fi
 # Construct the base URL
 REDIRECT_URL=${NEXUS_BASE}${REST_PATH}${ART_REDIR}
 
 # Generate the list of parameters
-PARAM_KEYS=( g a v r p c )
-PARAM_VALUES=( $GROUP_ID $ARTIFACT_ID $VERSION $REPO $PACKAGING $CLASSIFIER )
+PARAM_KEYS=( r g a v p c )
+PARAM_VALUES=( $REPO $GROUP_ID $ARTIFACT_ID $VERSION $PACKAGING $CLASSIFIER )
 PARAMS=""
 for index in ${!PARAM_KEYS[*]} 
 do
@@ -137,31 +137,47 @@ REDIRECT_URL="${REDIRECT_URL}?${PARAMS}"
 AUTHENTICATION=
 if [[ "$USERNAME" != "" ]]  && [[ "$PASSWORD" != "" ]]
 then
-	AUTHENTICATION="-u $USERNAME:$PASSWORD"
+    AUTHENTICATION="-u $USERNAME:$PASSWORD"
 fi
 
 if [[ "$NETRC" == "1" ]]
 then
-	AUTHENTICATION="-n"
+    AUTHENTICATION="-n"
 fi
- 
-if [[ "$SNAPSHOT_CHECK" != "" ]]
-then
+
+#TODO check exist
+#if [[ "$SNAPSHOT_CHECK" != "" ]]
+#then
   # remove $OUTPUT if nexus has newer version
-  if [[ -f $OUTPUT ]] && [[ "$(curl -s ${REDIRECT_URL} ${AUTHENTICATION} -I --location-trusted -z $OUTPUT -o /dev/null -w '%{http_code}' )" == "200" ]]
-  then 
-    echo "Nexus has newer version of $GROUP_ID:$ARTIFACT_ID:$VERSION" 
-    rm $OUTPUT
-  fi 
-  exit 0
-fi
+ # if [[ -f $OUTPUT ]] && [[ "$(curl -s ${REDIRECT_URL} ${AUTHENTICATION} -I --location-trusted -z $OUTPUT -o /dev/null -w '%{http_code}' )" == "200" ]]
+#  if [[ -f $OUTPUT ]] && [[ "$(curl -s -I --location-trusted -z $OUTPUT -o /dev/null -w '%{http_code}' ${REDIRECT_URL} ${AUTHENTICATION}  )" == "200" ]]
+#  then 
+#    echo "Nexus has newer version of $GROUP_ID:$ARTIFACT_ID:$VERSION" 
+#    rm $OUTPUT
+#  fi 
+#  exit 0
+#fi
 
 # Output
-OUT=
-if [[ "$OUTPUT" != "" ]] 
-then
-	OUT="-o $OUTPUT"
-fi
+#OUT=
+#if [[ "$OUTPUT" != "" ]] 
+#then
+#	OUT="-o $OUTPUT"
+#fi
 
 echo "Fetching Artifact from $REDIRECT_URL..." >&2
-curl -sS ${REDIRECT_URL} ${OUT} ${AUTHENTICATION} -v -R --location-trusted --fail  
+curl -sS -L -R ${AUTHENTICATION} ${REDIRECT_URL} -o ${ARTIFACT_ID}-${VERSION}.${PACKAGING}
+#curl -sS -O -L ${REDIRECT_URL} ${AUTHENTICATION} -v -R --location-trusted --fail 
+
+#dirty hack
+if [[ "$CLASSIFIER" == dist ]]
+then
+    echo "Artifact is zip format"
+    unzip -j -o ${ARTIFACT_ID}-${VERSION}.${PACKAGING} "${ARTIFACT_ID}-${VERSION}/bundles/*.jar" -d bundle
+elif [[ "$PACKAGING" == "jar" ]]
+then
+    #move to bundle directory
+    mv -f ${ARTIFACT_ID}-${VERSION}.${PACKAGING} bundle
+else 
+    echo "unknown doing"
+fi
