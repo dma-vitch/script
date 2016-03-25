@@ -169,15 +169,16 @@ echo "Fetching Artifact from $REDIRECT_URL..." >&2
 curl -sS -L -R ${AUTHENTICATION} ${REDIRECT_URL} -o ${ARTIFACT_ID}-${VERSION}.${PACKAGING}
 #curl -sS -O -L ${REDIRECT_URL} ${AUTHENTICATION} -v -R --location-trusted --fail 
 
+#for move to APACHE FELIX OSGI uncomment this
 #dirty hack
-if [[ "$CLASSIFIER" == dist ]]
-then
-    echo "Artifact is zip format"
-    unzip -j -o ${ARTIFACT_ID}-${VERSION}.${PACKAGING} "${ARTIFACT_ID}-${VERSION}/bundles/*.jar" -d bundle
-elif [[ "$PACKAGING" == "jar" ]]
-then
-    #move to bundle directory
-    mv -f ${ARTIFACT_ID}-${VERSION}.${PACKAGING} bundle
-else 
-    echo "unknown doing"
-fi
+#if [[ "$CLASSIFIER" == dist ]]
+#then
+#    echo "Artifact is zip format"
+#    unzip -j -o ${ARTIFACT_ID}-${VERSION}.${PACKAGING} "${ARTIFACT_ID}-${VERSION}/bundles/*.jar" -d bundle
+#elif [[ "$PACKAGING" == "jar" ]]
+#then
+#    #move to bundle directory
+#    mv -f ${ARTIFACT_ID}-${VERSION}.${PACKAGING} bundle
+#else 
+#    echo "unknown doing"
+#fi
