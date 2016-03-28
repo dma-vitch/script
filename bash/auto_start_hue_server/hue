@@ -15,6 +15,10 @@
 
 . /etc/init.d/functions
 
+if [ -f /lib/lsb/init-functions ] ; then
+    . /lib/lsb/init-functions
+fi
+
 LOCKFILE=/var/lock/subsys/hue
 #server's location 
 DAEMON=/usr/local/hue/build/env/bin/supervisor
