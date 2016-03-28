@@ -23,9 +23,27 @@ LOGDIR=/usr/local/hue/logs
 #PID directory to use
 PIDFILE=/usr/local/hue/supervisor.pid
 USER=hue
+NAME=hue
 EXEC=/usr/local/hue/build/env/bin/python
 DAEMON_OPTS="-p $PIDFILE -l $LOGDIR -d"
 HUE_SHUTDOWN_TIMEOUT=15
+
+if [ -f /etc/default/$NAME ] ; then
+    . /etc/default/$NAME
+fi
+
+# Check that the user exists (if we set a user)
+# Does the user exist?
+if [ -n "$USER" ] ; then
+    if getent passwd | grep -q "^$USER:"; then
+        # Obtain the uid and gid
+        DAEMONUID=`getent passwd |grep "^$USER:" | awk -F : '{print $3}'`
+        DAEMONGID=`getent passwd |grep "^$USER:" | awk -F : '{print $4}'`
+    else
+        log_failure_msg "The user $USER, required to run $NAME does not exist."
+        exit 1
+    fi
+fi
 
 hue_start() {
         DO="/sbin/runuser -s /bin/bash $USER -c"
