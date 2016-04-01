@@ -159,14 +159,15 @@ fi
 #fi
 
 # Output
-#OUT=
-#if [[ "$OUTPUT" != "" ]] 
-#then
-#	OUT="-o $OUTPUT"
-#fi
+OUT="-o ${ARTIFACT_ID}-${VERSION}.${PACKAGING}"
+if [[ "$OUTPUT" != "" ]].
+then
+    OUT="-o $OUTPUT"
+fi
 
 echo "Fetching Artifact from $REDIRECT_URL..." >&2
-curl -sS -L -R ${AUTHENTICATION} ${REDIRECT_URL} -o ${ARTIFACT_ID}-${VERSION}.${PACKAGING}
+curl -sS -L -R ${AUTHENTICATION} ${REDIRECT_URL} ${OUT}
+#${ARTIFACT_ID}-${VERSION}.${PACKAGING}
 #curl -sS -O -L ${REDIRECT_URL} ${AUTHENTICATION} -v -R --location-trusted --fail 
 
 #for move to APACHE FELIX OSGI uncomment this
