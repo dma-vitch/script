@@ -10,3 +10,6 @@ source pathto/functional_local
 functions getpath
 #for use in your scripts  call getpath:
 после вызова в переменной $DIRECTORY будет полный путь до скрипта
+
+# example usage validate_url:
+# if `validate_url $url >/dev/null`; then dosomething; else echo "does not exist"; fi
