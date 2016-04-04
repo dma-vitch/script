@@ -1,0 +1,34 @@
+[
+    {
+        "host": "webdav.yandex.ru",
+        "password": "********",
+        "user": "backup-uploader1",
+        "remotedir": "/dir1",
+        "targets": [
+            [
+                "/dir1/db-",
+                15
+            ],
+            [
+                "/dir1/upload-",
+                7
+            ]
+        ]
+    },
+    {
+        "host": "webdav.yandex.ru",
+        "password": "********",
+        "user": "backup-uploader2",
+        "remotedir": "/dir1",
+        "targets": [
+            [
+                "/dir2/db-",
+                15
+            ],
+            [
+                "/dir2/upload-",
+                7
+            ]
+        ]
+    }
+]
