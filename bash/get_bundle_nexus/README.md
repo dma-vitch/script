@@ -24,4 +24,6 @@ Sending the artifact to STDOUT may not always be the desired behavior. Just like
 Usage
 ------
 
-./get_bundle_from_nexus.sh -a ru.mts.sorm:mts-sorm-core:LATEST-SNAPSHOT
+./get_bundle_from_nexus.sh -a ru.test.ts:test-artifact:LATEST-SNAPSHOT
+or 
+./get_bundle_from_nexus.sh -a ru.test.ts:test-artifact:2.3.8 -c zip
