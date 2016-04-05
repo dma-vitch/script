@@ -26,6 +26,13 @@ is_running() {
     [ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
 }
 
+# For SELinux we need to use 'runuser' not 'su' or sudo
+#if [ -x "/sbin/runuser" ]; then
+#    SU="/sbin/runuser"
+#else
+#    SU="/bin/su"
+#fi
+
 # Check that the user exists (if we set a user)
 # Does the user exist?
 if [ -n "$user" ] ; then
