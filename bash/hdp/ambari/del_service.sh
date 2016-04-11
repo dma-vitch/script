@@ -71,7 +71,7 @@ done
 shift $((OPTIND - 1))
 
 #detect name of cluster
-output=`curl -u AMBARI_USER:$PASSWORD -i -H 'X-Requested-By: ambari'  http://$AMBARI_HOST:$AMBARI_PORT/api/v1/clusters`
+output=`curl -u $AMBARI_USER:$PASSWORD -i -H 'X-Requested-By: ambari'  http://$AMBARI_HOST:$AMBARI_PORT/api/v1/clusters`
 CLUSTER=`echo $output | sed -n 's/.*"cluster_name" : "\([^\"]*\)".*/\1/p'`
 
 #run commands
