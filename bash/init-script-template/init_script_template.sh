@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+﻿#!/bin/bash
 ### BEGIN INIT INFO
 # Provides:
 # Required-Start:    $remote_fs $syslog
@@ -13,7 +13,7 @@ dir=""
 cmd=""
 user=""
 
-name=`basename $0`
+name=$(basename "$0")
 pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
@@ -23,7 +23,7 @@ get_pid() {
 }
 
 is_running() {
-    [ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
+    [ -f "$pid_file" ] && ps $(get_pid) > /dev/null 2>&1
 }
 
 # For SELinux we need to use 'runuser' not 'su' or sudo
@@ -38,8 +38,8 @@ is_running() {
 if [ -n "$user" ] ; then
     if getent passwd | grep -q "^$user:"; then
         # Obtain the uid and gid
-        DAEMONUID=`getent passwd |grep "^$user:" | awk -F : '{print $3}'`
-        DAEMONGID=`getent passwd |grep "^$user:" | awk -F : '{print $4}'`
+        DAEMONUID=$(getent passwd |grep "^$user:" | awk -F : '{print $3}')
+        DAEMONGID=$(getent passwd |grep "^$user:" | awk -F : '{print $4}')
     else
         echo "The user $user, required to run $name does not exist."
         exit 1
@@ -68,7 +68,7 @@ case "$1" in
     stop)
     if is_running; then
         echo -n "Stopping $name.."
-        kill `get_pid`
+        kill $(get_pid)
         for i in {1..10}
         do
             if ! is_running; then
