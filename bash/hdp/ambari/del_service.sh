@@ -5,7 +5,7 @@ NORMAL="\033[0m\n"
 
 function usage {
 cat <<EOF
-Usage: `basename $0` [options]
+Usage: $(basename "$0") [options]
 
 This script will purge old logs from hadoop services.
 
@@ -28,7 +28,7 @@ AMBARI_PORT=8080
 AMBARI_USER=admin
 PASSWORD=admin
 
-if [ -z $* ]
+if [ -z "$*" ]
 	then
 	printf "$RED No options found! $NORMAL \n" >&2
 		usage
@@ -58,11 +58,11 @@ do
 		AMBARI_PORT=$OPTARG
 		;;
 	:)
-	    printf "$RED Missing argument for -"$OPTARG" $NORMAL \n" >&2
+	    printf "$RED Missing argument for -$OPTARG $NORMAL \n" >&2
 	    usage
 	    ;;
 	\?)	
-	    printf "$RED Unknown option -"$OPTARG" $NORMAL \n" >&2
+	    printf "$RED Unknown option -$OPTARG $NORMAL \n" >&2
 	    usage
 	    exit
 	    ;;
@@ -71,8 +71,8 @@ done
 shift $((OPTIND - 1))
 
 #detect name of cluster
-output=`curl -u $AMBARI_USER:$PASSWORD -i -H 'X-Requested-By: ambari'  http://$AMBARI_HOST:$AMBARI_PORT/api/v1/clusters`
-CLUSTER=`echo $output | sed -n 's/.*"cluster_name" : "\([^\"]*\)".*/\1/p'`
+output=$(curl -u "$AMBARI_USER:$PASSWORD" -i -H 'X-Requested-By: ambari'  http://"$AMBARI_HOST:$AMBARI_PORT"/api/v1/clusters)
+CLUSTER=$(echo "$output" | sed -n 's/.*"cluster_name" : "\([^\"]*\)".*/\1/p')
 
 #run commands
 curl -u $AMBARI_USER:$PASSWORD -i -H 'X-Requested-By: ambari' -X DELETE http://$AMBARI_HOST:$AMBARI_PORT/api/v1/clusters/$CLUSTER/services/$SERVICE
