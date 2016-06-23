@@ -8,6 +8,7 @@ DIRECTORY=`dirname "$ABSOLUTE_FILENAME"`
 }
 
 JAVA="/opt/jdk-8u66/jdk1.8.0_66/"
+pid_file="$(pwd)/RUNNING_PID"
 
 # Which java to use
 #if [ -z "$JAVA_HOME" ]; then
@@ -15,6 +16,13 @@ JAVA="/opt/jdk-8u66/jdk1.8.0_66/"
 #  else
 #    JAVA="$JAVA_HOME/bin/java"
 #fi
+get_pid() {
+    cat "$pid_file"
+}
+
+is_running() {
+    [ -f "$pid_file" ] && ps $(get_pid) > /dev/null 2>&1
+}
 
 function v_java {
 if type -p java; then
@@ -40,9 +48,13 @@ if [[ "$_java" ]]; then
 fi
 }
 
+if ! is_running; then
+    [ -f "$pid_file" ] && rm -f ${pid_file}
+fi
+
 getpath
 v_java
 
-echo $JAVA_PATH
+#echo $JAVA_PATH
 
 $DIRECTORY/bin/kafka-manager $JAVA_PATH -J-Xms128M -J-Xmx512m -J-server

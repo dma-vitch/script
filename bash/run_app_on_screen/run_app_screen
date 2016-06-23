@@ -25,7 +25,7 @@ ARGS=""
 OWNER=user
 
 pidof(){
-    echo $(sudo -u $OWNER $screen -ls | grep "${session_name}" | awk '{print$1}' | sed 's/\.'"${session_name}"'//')
+    echo $(sudo -u $OWNER $screen -ls | awk '{print$1}' | egrep ${session_name}$  | sed 's/\.'"${session_name}"'//')
 }
 
 PID=$(pidof)
