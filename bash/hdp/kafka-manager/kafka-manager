@@ -1,0 +1,130 @@
+#!/bin/bash
+# kafka-manager This starts and stops kafka-manager
+#
+# description: This starts the Linux Auditing System Daemon, \
+#              which collects security related events in a dedicated \
+#              audit log. If this daemon is turned off, audit events \
+#              will be sent to syslog.
+#
+### BEGIN INIT INFO
+# Provides:          kafka-manager
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:     2 3 4
+# Default-Stop:      0 1 6
+# Description:       kafka-manager
+# Short-Description: Enable kafka-manager service provided by kafka-manager
+
+. /etc/rc.d/init.d/functions
+
+DAEMON=kafka-manager
+KAFKA_MANAGER_HOME="/opt/kafka-manager-1.3.0.5"
+screen="screen"
+session_name="$DAEMON"
+ARGS="-J-Xms128M -J-Xmx512m -J-server"
+OWNER=sorm
+pid_file="${KAFKA_MANAGER_HOME}/RUNNING_PID"
+#set this var if your default java version <1.8
+JAVA="/opt/jdk-8u66/jdk1.8.0_66/"
+
+pidof(){
+    echo $(sudo -u $OWNER $screen -ls | awk '{print$1}' | egrep ${session_name}$  | sed 's/\.'"${session_name}"'//')
+}
+
+PID=$(pidof)
+
+get_pid() {
+    cat "$pid_file"
+}
+
+is_running() {
+    [ -f "$pid_file" ] && ps $(get_pid) > /dev/null 2>&1
+}
+
+killtree() {
+    local _pid=$1
+    for _child in $(ps -o pid --no-headers --ppid ${_pid}); do
+        echo "kill tree ${_child}"
+        killtree ${_child}
+    done
+    if [ -n ${_pid} ]; then
+        echo "kill ${_pid}"
+        while kill ${_pid}; do
+	    sleep 1
+        done
+    fi
+}
+
+function v_java {
+if type -p java; then
+#    echo found java executable in PATH
+    _java=java
+elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
+#    echo found java executable in JAVA_HOME     
+    _java="$JAVA_HOME/bin/java"
+else
+    echo "no java"
+fi
+  
+if [[ "$_java" ]]; then
+    version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+#    echo version "$version"
+    if [[ "$version" > "1.8" ]]; then
+#       echo version is more than 1.8
+	JAVA_PATH=""
+    else         
+#        echo version is less than 1.8
+	JAVA_PATH="-java-home $JAVA"
+    fi
+fi
+}
+
+start(){
+    echo "Starting $DAEMON"
+    if [ -z "$PID" ]; then
+        cd "$KAFKA_MANAGER_HOME"
+        exec sudo -u $OWNER ${screen} -dmS "${session_name}" "${KAFKA_MANAGER_HOME}/bin/kafka-manager" $JAVA_PATH $ARGS
+    else
+        echo -e "Already started or busy\nPIDs ${PID}"
+        exit 1
+    fi
+}
+
+status(){
+    pid=$(pidof)
+    if [ -n "$pid" ]; then
+		echo -e "\e[00;32mKafka-manager is running with pid: $pid\e[00m"
+    else
+		echo -e "\e[00;31mKafka-manager is not running\e[00m"
+		return 3
+    fi
+}
+
+v_java
+
+#remove pidfile if kafka not stoped correctly
+if ! is_running; then
+    [ -f "$pid_file" ] && rm -f ${pid_file}
+fi
+
+case "$1" in
+    start)
+		start
+    ;;
+    stop)
+		echo "Stopping $DAEMON with pid=$PID"
+		killtree $PID
+		sleep 2
+		exec sudo -u $OWNER ${screen} -wipe
+    ;;
+    restart)
+		$0 stop
+		sleep 1
+		$0 start
+    ;;
+    status)
+		status
+    ;;
+    *)
+		echo "usage: $0 {start|stop|restart|status}"
+esac
