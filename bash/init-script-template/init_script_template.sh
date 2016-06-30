@@ -41,7 +41,7 @@ for dir in $(dirname ${pid_file}) $(dirname ${stdout_log}) $(dirname ${stderr_lo
 check_privilege() {
   if [ "$EUID" -ne 0 ]; then
     echo "Please run as root or with sudo"
-	exit 1
+    exit 1
   fi
 }
 
@@ -55,9 +55,9 @@ check_privilege() {
 status(){
         printf "%-50s\n" "Checking $name..."
         #if is_running; then
-		if [ -f "$pid_file" ]; then
+        if [ -f "$pid_file" ]; then
             printf "%s\n" "Checking running $name with pid = $(get_pid)"
-			if [ -z "`ps axf | grep ${name} | grep -v grep`" ]; then
+            if [ -z "`ps axf | grep ${name} | grep -v grep`" ]; then
                 printf "%s\n" "Process dead but pidfile exists"
             else
                 echo "Running"
