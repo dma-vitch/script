@@ -38,12 +38,34 @@ for dir in $(dirname ${pid_file}) $(dirname ${stdout_log}) $(dirname ${stderr_lo
         done
 }
 
+check_privilege() {
+  if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root or with sudo"
+	exit 1
+  fi
+}
+
 # For SELinux we need to use 'runuser' not 'su' or sudo
 #if [ -x "/sbin/runuser" ]; then
 #    SU="/sbin/runuser"
 #else
 #    SU="/bin/su"
 #fi
+
+status(){
+        printf "%-50s\n" "Checking $name..."
+        #if is_running; then
+		if [ -f "$pid_file" ]; then
+            printf "%s\n" "Checking running $name with pid = $(get_pid)"
+			if [ -z "`ps axf | grep ${name} | grep -v grep`" ]; then
+                printf "%s\n" "Process dead but pidfile exists"
+            else
+                echo "Running"
+            fi
+        else
+            printf "%s\n" "Service not running"
+        fi
+}
 
 # Check that the user exists (if we set a user)
 # Does the user exist?
@@ -57,6 +79,9 @@ if [ -n "$user" ] ; then
         exit 1
     fi
 fi
+
+# Script needs to be run as root
+check_privilege
 
 case "$1" in
     start)
@@ -118,11 +143,7 @@ case "$1" in
     $0 start
     ;;
     status)
-    if is_running; then
-        echo "Running"
-    else
-        echo "Stopped"
-        exit 1
+       status
     fi
     ;;
     *)
