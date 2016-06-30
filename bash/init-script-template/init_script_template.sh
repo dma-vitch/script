@@ -65,10 +65,10 @@ case "$1" in
     else
         echo "Starting $name"
         #create not existing directory
-		mk_dir
+        mk_dir
 		cd "$work_dir"
-		#remove pidfile if not stoped correctly
-		del_pidfile
+        #remove pidfile if not stoped correctly
+        del_pidfile
         if [ -z "$user" ]; then
             sudo $cmd >> "$stdout_log" 2>> "$stderr_log" &
         else
