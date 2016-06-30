@@ -9,7 +9,7 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-dir=""
+work_dir=""
 cmd=""
 user=""
 
@@ -24,6 +24,18 @@ get_pid() {
 
 is_running() {
     [ -f "$pid_file" ] && ps $(get_pid) > /dev/null 2>&1
+}
+
+del_pidfile() {
+	[ -f "$pid_file" ] && rm -f ${pid_file} > /dev/null 2>&1
+}
+
+mk_dir() {
+for dir in $(dirname ${pid_file}) $(dirname ${stdout_log}) $(dirname ${stderr_log})
+        do
+            mkdir -p $dir
+            chown -R "$user" $dir
+        done
 }
 
 # For SELinux we need to use 'runuser' not 'su' or sudo
@@ -52,7 +64,11 @@ case "$1" in
         echo "Already started"
     else
         echo "Starting $name"
-        cd "$dir"
+        #create not existing directory
+		mk_dir
+		cd "$work_dir"
+		#remove pidfile if not stoped correctly
+		del_pidfile
         if [ -z "$user" ]; then
             sudo $cmd >> "$stdout_log" 2>> "$stderr_log" &
         else
