@@ -37,9 +37,9 @@ del_pidfile() {
 status(){
         printf "%-50s\n" "Checking $name..."
         #if is_running; then
-		if [ -f "$pid_file" ]; then
+	if [ -f "$pid_file" ]; then
             printf "%s\n" "Checking running $name with pid = $(get_pid)"
-			if [ -z "`ps axf | grep ${name} | grep -v grep`" ]; then
+            if [ -z "`ps axf | grep ${name} | grep -v grep`" ]; then
                 printf "%s\n" "Process dead but pidfile exists"
             else
                 echo "Running"
@@ -52,7 +52,7 @@ status(){
 check_privilege() {
   if [ "$EUID" -ne 0 ]; then
     echo "Please run as root or with sudo"
-	exit 1
+    exit 1
   fi
 }
 
@@ -82,10 +82,10 @@ case "$1" in
             mkdir -p $dir
             chown -R "$user" $dir
         done
-		cd "$work_dir"
+	cd "$work_dir"
         #remove pidfile if not stoped correctly
-		del_pidfile
-		if [ -z "$user" ]; then
+	del_pidfile
+	if [ -z "$user" ]; then
             sudo $cmd >> "$stdout_log" 2>> "$stderr_log" &
         else
             sudo -u "$user" $cmd >> "$stdout_log" 2>> "$stderr_log" &
@@ -117,10 +117,8 @@ case "$1" in
         else
             echo "Stopped"
             #remove pidfile
-			del_pidfile
-			#if [ -f "$pid_file" ]; then
-            #    rm "$pid_file" fi
-        fi
+	    del_pidfile
+	fi
     else
         echo "Not running"
     fi
@@ -134,11 +132,8 @@ case "$1" in
     fi
     $0 start
     ;;
-
     status)
-		status
-	#if is_running; then
-    #    echo "Running" else echo "Stopped" exit 1 fi
+	status
     ;;
     *)
     echo "Usage: $0 {start|stop|restart|status}"
