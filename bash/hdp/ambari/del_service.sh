@@ -47,7 +47,8 @@ do
         exit 1
 	    ;;
 	s)
-	    SERVICE=$OPTARG
+	    #touppercase
+		SERVICE=${OPTARG^^}
 	    ;;
 	u)
 	    AMBARI_USER=$OPTARG
