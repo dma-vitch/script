@@ -32,7 +32,7 @@ chmod 750 path-to-script
 - Add Service to the Startup
 
 `
-chkconfig --add oraservice
+chkconfig --add hadoop-core
 `
 
 - Turn-on a Service for a Selected Run Level
