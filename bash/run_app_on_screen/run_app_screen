@@ -28,7 +28,7 @@ pidof(){
     echo $(sudo -u $OWNER $screen -ls | awk '{print$1}' | egrep ${session_name}$  | sed 's/\.'"${session_name}"'//')
 }
 
-PID=$(pidof)
+pid=$(pidof)
 
 killtree() {
     local _pid=$1
@@ -46,11 +46,11 @@ killtree() {
 
 start(){
     echo -e "\e[00;32mStarting $DAEMON\e[00m"
-    if [ -z "$PID" ]; then
+    if [ -z "$pid" ]; then
         cd "$KAFKA_MANAGER_HOME"
         exec sudo -u $OWNER ${screen} -dmS "${session_name}" "${KAFKA_MANAGER_HOME}/run.sh" $ARGS
     else
-        echo -e "\e[00;31mAlready started or busy\nPIDs ${PID}\e[00m"
+        echo -e "\e[00;31mAlready started or busy\nPIDs ${pid}\e[00m"
         exit 1
     fi
 }
@@ -70,8 +70,8 @@ case "$1" in
 		start
     ;;
     stop)
-		echo "Stopping $DAEMON with pid=$PID"
-		killtree $PID
+		echo "Stopping $DAEMON with pid=$pid"
+		killtree $pid
 		sleep 2
 		exec sudo -u $OWNER ${screen} -wipe
     ;;
