@@ -41,56 +41,56 @@ OUTPUT=
 
 while getopts "hvza:c:e:o:r:u:p:n:m" OPTION
 do
-     case $OPTION in
-         h)
-             usage
-             exit 1
-             ;;
-         a)
-	     OIFS=$IFS
-             IFS=":"
-	     GAV_COORD=( $OPTARG )
-	     GROUP_ID=${GAV_COORD[0]}
-             ARTIFACT_ID=${GAV_COORD[1]}
-             VERSION=${GAV_COORD[2]}	     
-	     IFS=$OIFS
-             ;;
-         c)
-             CLASSIFIER=$OPTARG
-             ;;
-         e)
-             PACKAGING=$OPTARG
-             ;;
-         m)
-             NETRC=1
-             ;;
-         v)
-             VERBOSE=1
-             ;;
-         z)
-             SNAPSHOT_CHECK=1
-             ;;
-	 o)
-	     OUTPUT=$OPTARG
-	     ;;
-	 r)
-	     REPO=$OPTARG
-	     ;;
-	 u)
-	     USERNAME=$OPTARG
-	     ;;
-	 p)
-	     PASSWORD=$OPTARG
-	     ;;
-	 n)
-	     NEXUS_BASE=$OPTARG
-	     ;;
-         ?)
-             echo "Illegal argument $OPTION=$OPTARG" >&2
-             usage
-             exit
-             ;;
-     esac
+    case $OPTION in
+        h)
+           usage
+           exit 1
+           ;;
+        a)
+           OIFS=$IFS
+           IFS=":"
+           GAV_COORD=( $OPTARG )
+           GROUP_ID=${GAV_COORD[0]}
+           ARTIFACT_ID=${GAV_COORD[1]}
+           VERSION=${GAV_COORD[2]}	     
+           IFS=$OIFS
+           ;;
+        c)
+           CLASSIFIER=$OPTARG
+           ;;
+        e)
+           PACKAGING=$OPTARG
+           ;;
+        m)
+           NETRC=1
+           ;;
+        v)
+           VERBOSE=1
+           ;;
+        z)
+           SNAPSHOT_CHECK=1
+           ;;
+        o)
+	       OUTPUT=$OPTARG
+	       ;;
+        r)
+	       REPO=$OPTARG
+	       ;;
+        u)
+	       USERNAME=$OPTARG
+	       ;;
+        p)
+	       PASSWORD=$OPTARG
+	       ;;
+        n)
+	       NEXUS_BASE=$OPTARG
+	       ;;
+        ?)
+           echo "Illegal argument $OPTION=$OPTARG" >&2
+           usage
+           exit
+           ;;
+    esac
 done
 
 if [[ -z $GROUP_ID ]] || [[ -z $ARTIFACT_ID ]] || [[ -z $VERSION ]]
