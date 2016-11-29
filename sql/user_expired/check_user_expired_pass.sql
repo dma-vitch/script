@@ -1,21 +1,25 @@
-/* ‡алоченные пользователи*/
+п»ї/* Р—Р°Р»РѕС‡РµРЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё*/
 select username, account_status from dba_users where ACCOUNT_STATUS LIKE '%EXPIRED%';
-/* “знаем дату окончаниЯ действиЯ паролЯ */
+/* РЈР·РЅР°РµРј РґР°С‚Сѓ РѕРєРѕРЅС‡Р°РЅРёСЏ РґРµР№СЃС‚РІРёСЏ РїР°СЂРѕР»СЏ */
 select username, account_status, to_char(expiry_date, 'DD-MM-YYYY') EXP_DATE from dba_users where username = 'PDB_REPORT'
 /*select username, account_status, to_char(expiry_date, 'DD-MM-YYYY') EXP_DATE from dba_users where username LIKE 'PDB%'*/
-/* ђазлочиваем и устанавливаем пароль*/
+/* Р Р°Р·Р»РѕС‡РёРІР°РµРј Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїР°СЂРѕР»СЊ*/
 /*ALTER USER SORM_NGENIE ACCOUNT UNLOCK;
 ALTER USER PDB_REPORT IDENTIFIED BY pdb_report*/
-/* устанавливаем политику без истечения паролей*/
+/* СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕР»РёС‚РёРєСѓ Р±РµР· РёСЃС‚РµС‡РµРЅРёВ¤ РїР°СЂРѕР»РµР№*/
 /*ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;*/
 /*select * from dba_profiles
 select * from profile$
 */
 /*
-проверЯем сколько попыток не правильного входа может быть и на сколько лочим аккаунт
+РїСЂРѕРІРµСЂСЏРµРј СЃРєРѕР»СЊРєРѕ РїРѕРїС‹С‚РѕРє РЅРµ РїСЂР°РІРёР»СЊРЅРѕРіРѕ РІС…РѕРґР° РјРѕР¶РµС‚ Р±С‹С‚СЊ Рё РЅР° СЃРєРѕР»СЊРєРѕ Р»РѕС‡РёРј Р°РєРєР°СѓРЅС‚
 */
 /*
 select RESOURCE_NAME,LIMIT FROM dba_profiles
 where  PROFILE='DEFAULT' AND RESOURCE_NAME IN ('FAILED_LOGIN_ATTEMPTS','PASSWORD_LOCK_TIME')
 */
-
+/*
+РЈР·РЅР°РµРј РїР°СЂРѕР»СЊ*/
+/*
+select password from dba_users where username = 'PDB_EEST';
+*/
