@@ -144,7 +144,6 @@ case "$1" in
     ;;
     status)
        status
-    fi
     ;;
     *)
     echo "Usage: $0 {start|stop|restart|status}"
